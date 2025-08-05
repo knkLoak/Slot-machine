@@ -110,11 +110,11 @@ if st.session_state.spin_log:
         st.latex(r"""RTP = \frac{\text{Total Payout}}{\text{Total Spent}} \times 100""")
         st.markdown("**Bet Per Spin:** $1.00  ")
         st.markdown("**Payout Rule:** Only 3 identical symbols award a payout.")
-        st.markdown("### 🎰 Symbol Probabilities and Payouts")
+        st.markdown("### Symbol Probabilities and Payouts")
         st.table(pd.DataFrame([
             {"Symbol": s["name"], "Probability": s["weight"], "Payout ($)": s["payout"]} for s in symbols
         ]))
-        st.markdown("### 📐 Theoretical Expected Value (EV)")
+        st.markdown("### Theoretical Expected Value (EV)")
         st.latex(r"""EV = \sum (p_i^3 \times \text{payout}_i)""")
         st.markdown("Where $p_i$ is the probability of each symbol. This reflects the long-term average return per spin under ideal randomness.")
 else:
