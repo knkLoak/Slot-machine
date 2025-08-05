@@ -64,7 +64,7 @@ st.title("Slot Machine Simulation")
 
 st.markdown("Spin the reels and track your session stats! Matching 3 symbols yields a payout.")
 
-col1, col2, col3 = st.columns([1, 1, 1])
+col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
 with col1:
     if st.button("Spin Once"):
         spin()
@@ -77,7 +77,10 @@ with col3:
     if st.button("🔄 Reset Session"):
         st.session_state.spin_log = []
         st.session_state.balance = 100.00
-        
+
+with col4:
+    if st.button("Refill Balance ($100)"):
+        st.session_state.balance += 100.00
 # Display stats if spins exist
 if st.session_state.spin_log:
     df = pd.DataFrame(st.session_state.spin_log)
@@ -97,7 +100,7 @@ if st.session_state.spin_log:
     st.markdown(f"**Total Spent:** ${total_spent:.2f}")
     st.markdown(f"**Total Payout:** ${total_payout:.2f}")
     st.markdown(f"**Net Gain/Loss:** ${net_gain:.2f}")
-    st.markdown(f"**Estimated RTP:** {rtp:.2f}%")
+    st.markdown(f"**Estimated RTP (Return To Player):** {rtp:.2f}%")
     st.markdown(f"**Remaining Balance:** ${st.session_state.balance:.2f}")
 
     csv = df.to_csv(index=False).encode('utf-8')
@@ -105,28 +108,24 @@ if st.session_state.spin_log:
 
     with st.expander("🧠 How the Math Works"):
         st.markdown("""
-        **RTP (Return to Player):**
-
-        \[
+        ### RTP (Return to Player)
+        $$
         RTP = \frac{\text{Total Payout}}{\text{Total Spent}} \times 100
-        \]
+        $$
 
         **Bet Per Spin:** $1.00  
         **Payout Rule:** Only 3 identical symbols award a payout.  
 
-        **Symbol Probabilities and Payouts:**
+        ### Probabilities and Payouts
+        """)
+        st.table(pd.DataFrame([{"Symbol": s["name"], "Probability": s["weight"], "Payout ($)": s["payout"]} for s in symbols]))
 
-        | Symbol | Probability | Payout |
-        |--------|-------------|--------|
-        """ + "\n".join([f"| {s['name']} | {s['weight']:.2f} | ${s['payout']} |" for s in symbols]) +
-        """
-
-        **Theoretical Expected Value (EV):**
-
-        \[
+        st.markdown("""
+        ### Theoretical Expected Value (EV)
+        $$
         EV = \sum (p_i^3 \times \text{payout}_i)
-        \]
-        Where \( p_i \) is the probability of each symbol. This reflects the long-term average return per spin under ideal randomness.
+        $$
+        Where $p_i$ is the probability of each symbol. This reflects the long-term average return per spin under ideal randomness.
         """)
 else:
     st.info("Click spin to start playing!")
