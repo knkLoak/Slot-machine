@@ -104,28 +104,18 @@ if st.session_state.spin_log:
     st.markdown(f"**Remaining Balance:** ${st.session_state.balance:.2f}")
 
     csv = df.to_csv(index=False).encode('utf-8')
-    st.download_button("⬇️ Download Spin Log (CSV)", data=csv, file_name="spin_log.csv", mime="text/csv")
+    st.download_button("Download Spin Log (CSV)", data=csv, file_name="spin_log.csv", mime="text/csv")
 
-    with st.expander("🧠 How the Math Works"):
-        st.markdown("""
-        ### RTP (Return to Player)
-        $$
-        RTP = \frac{\text{Total Payout}}{\text{Total Spent}} \times 100
-        $$
-
-        **Bet Per Spin:** $1.00  
-        **Payout Rule:** Only 3 identical symbols award a payout.  
-
-        ### Probabilities and Payouts
-        """)
-        st.table(pd.DataFrame([{"Symbol": s["name"], "Probability": s["weight"], "Payout ($)": s["payout"]} for s in symbols]))
-
-        st.markdown("""
-        ### Theoretical Expected Value (EV)
-        $$
-        EV = \sum (p_i^3 \times \text{payout}_i)
-        $$
-        Where $p_i$ is the probability of each symbol. This reflects the long-term average return per spin under ideal randomness.
-        """)
+    with st.expander("Odds Disclosure"):
+        st.latex(r"""RTP = \frac{\text{Total Payout}}{\text{Total Spent}} \times 100""")
+        st.markdown("**Bet Per Spin:** $1.00  ")
+        st.markdown("**Payout Rule:** Only 3 identical symbols award a payout.")
+        st.markdown("### 🎰 Symbol Probabilities and Payouts")
+        st.table(pd.DataFrame([
+            {"Symbol": s["name"], "Probability": s["weight"], "Payout ($)": s["payout"]} for s in symbols
+        ]))
+        st.markdown("### 📐 Theoretical Expected Value (EV)")
+        st.latex(r"""EV = \sum (p_i^3 \times \text{payout}_i)""")
+        st.markdown("Where $p_i$ is the probability of each symbol. This reflects the long-term average return per spin under ideal randomness.")
 else:
     st.info("Click spin to start playing!")
